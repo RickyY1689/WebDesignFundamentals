@@ -100,6 +100,18 @@ var imgModel = require({Path to schema file});
 
 Finally we'll add our GET and POST requests. GET requests remain the same as we're simply retrieving data we've already stored. The POST is where everything we've done with `multer` comes in. In addition to the usual `req` and `res` we'll add a new `upload` argument which will contain our image file. 
 
+**Notes:** 
+
+- Make sure the parameter you enter in your post request stores the images under "image" as `upload.simple('image')` is looking for data stored under the name `'image'`. 
+
+- If you have multiple routes and have CRUD requests written in JavaScript files within a routes folder if you place your uploads at the same directory level make sure to move up a level when you save the data 
+
+  ```JSX
+  data: fs.readFileSync(path.join(__dirname + '/../uploads/' + req.file.filename)),
+  ```
+
+  ![image-20200830162751005](C:\Users\Richa\AppData\Roaming\Typora\typora-user-images\image-20200830162751005.png)
+
 ``` Javascript
 app.post('/', upload.single('image'), (req, res, next) => { 
     var obj = { 
@@ -131,7 +143,17 @@ Feel free to test out your backend with something like Postman to verify everyth
 
 ## Performing CRUD Operations With Our Frontend 
 
-Now that our backend is working I won't bother covering how you should go about setting up your frontend as there's tons of ways to set up this scenario. Just be sure to have some button in charge of opening file explorer and allowing the user to select a file to upload. Once all the all the data you wish to upload have been stored in their various state objects we'll work with Axios to send our **multipart form data**. 
+Now that our backend is working I won't bother covering how you should go about setting up your frontend as there's tons of ways to set up this scenario. Just be sure to have some button in charge of opening file explorer and allowing the user to select a file to upload. Once they user selects their image, you can assign it to your state object via calling a function akin to the following: 
+
+``` jsx
+const [image, setImage] = useState([])
+
+const onUploadChange = (event) => {
+    setImage(event.target.files[0])
+}
+```
+
+Once all the all the data you wish to upload have been stored in their various state objects we'll work with Axios to send our **multipart form data**. 
 
 First we create a new variable of `FormData` which we will append all the data we want to send into it. Then send the data via Axios as we would with any other Axios POST request. The GET request remains the same as other GET requests. 
 
@@ -170,6 +192,8 @@ axios({
 As we mentioned earlier, this process saves your image file as a binary string within MongoDB, you can see for yourself by viewing the data within your collection on your MongoDB cluster! However, when we use Axios to sent our get request the data received is no longer in binary due to JSON's inability to carry binary data. This just means we need to convert the buffer data into a binary string to display as an image. This can be done as follows where `imageData.img.contentType` houses the image extension (png, jpg, etc.) and `imageDaata.img.data` holds the buffer data. 
 
 ``` JSX
+import { Buffer } from 'buffer' //make sure you've imported buffer!!!
+...
 <img src={`data:image/${imageData.img.contentType};base64,${Buffer.from(imageData.img.data, 'binary').toString('base64')}`} />
 ```
 
