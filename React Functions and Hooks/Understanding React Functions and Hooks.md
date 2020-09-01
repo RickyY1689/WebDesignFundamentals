@@ -117,3 +117,20 @@ const TableBody = (props) => {
 }
 ```
 
+
+
+### Render Components Via Iteration of a Variable 
+
+If we want to iterate through a array and display html elements for each element within the array it can be done through both the `.map` and `.forEach` functions. Personally I still haven't played with the latter much but below is a working example of the former. Note that it is required each element be associated with an index key. The `.map` function returns two values, a value return (the first variable) followed by an index value (the second variable).   
+
+```jsx
+{data.map((imageData, index) => (
+    <div key={index}>
+        <p> {imageData.name} </p>
+        <p> {Buffer.from(imageData.img.data, 'binary').toString('base64')} </p>
+        {/* 'data:image/*;base64,${imageData.img.data.data}' */}
+        <img src={`data:image/${imageData.img.contentType};base64,${Buffer.from(imageData.img.data, 'binary').toString('base64')}`} />
+    </div>
+))}
+```
+
