@@ -75,6 +75,34 @@ useEffect(() => {
 
 **Note:** These functions can be put either within your main function within the component or outside of it. However, if you plan on updating variables within some function then you better place the useEffect functions within it. 
 
+**Note:** We can also add something inside the [] which will just mean the useEffect function will run whenever that thing within the brackets gets changed.
+
+## Quality of Life Additions To Make Your Development Easier
+
+### Working with Scripts 
+
+Often times we'll need to start both a backend server as well as a frontend and it can get quite tedious. To make things easier we can add scripts within the `package.json` of our Reactjs app instructing it to start up the backend upon it's own startup or via it's own startup command. 
+
+``` javascript
+"scripts": {
+    ...
+    "start-flask-api": "cd api && venv/bin/flask run"
+    ...
+}
+```
+
+So now we can start our we can start a flask backend for example with `npm run start-flask-api`.
+
+### Setting up Proxies
+
+By adding a proxy within your `package.json` file it will allow your web app to redirect itself to the URL you set the proxy to be when it can't find a specific request.
+
+``` javascript
+"proxy": {URL}
+```
+
+ 
+
 ## General Reactjs Things to Know
 
 ### Passing Data During Rerouting
